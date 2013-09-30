@@ -1,18 +1,15 @@
 // Client Side js
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://172.28.178.132:3000');
+var myname = 'ID '+Math.floor(Math.random()*1000);
+
 socket.on('welcome', function(data) {
 	console.log(data);
-	socket.emit('setName', {name: 'Random Name'});
+	socket.emit('setName', {name: myname});
 });
 
 socket.on('confirm', function(data) {
 	console.log('Confirm: '+data.message);
 });
-
-// If Controller
-
-// If Main Screen
-
 
 // Performance calls for use in rttHeartBeat
 window.performance = window.performance || {};

@@ -34,39 +34,61 @@ app.get('/users', user.list);
 app.get('/screen', routes.screen);
 app.get('/controller', routes.controller);
 
+var allowCrossDomain = function(req, res, next) {
+    console.log('allowingCrossDomain');
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, Accept, Origin, Referer, User-Agent, Content-Type, Authorization, X-Mindflash-SessionID');
+	  
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    } else {
+      next();
+    }
+};
+ 
+app.configure(function() {
+    app.use(allowCrossDomain);
+});
+
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
 
 
 // Websockets stuff
 
 var io = io.listen(server);
 io.set('log level', 1);
+
 io.sockets.on('connection', function(socket) {
 	var confirmRec = function(msg) {
 		socket.emit('confirm', { message : msg });
 	}
 
-	var confirmNum = function(roomname) {
-		socket.broadcast.to(roomname).emit('num_clients', {num : io.sockets.clients(roomname).length });
+	var confirmnum = function(roomname) {
+		socket.broadcast.to('testroom-screen').emit('num_clients', {num : io.sockets.clients(roomname).length });
 	}
 
 	socket.emit('welcome', { hello : 'world'});
 
 	socket.on('register', function(data) {
 		if (data.type === 'screen') {
-			socket.join('testroom');
+			socket.join('testroom-screen');
 			confirmRec('Joined as screen');
 		} else if (data.type === 'controller') {
-			socket.join('testroom');
+			socket.join('testroom-controller');
 			confirmRec('Joined as controller');
-			confirmNum('testroom');
 		}
+
+		socket.join('testroom');
+		confirmnum('testroom-controller');
 	});
 
 	socket.on('disconnect', function() {
-		socket.broadcast.to('testroom').emit('num_clients', {num : io.sockets.clients('testroom').length});
+		socket.broadcast.to('testroom').emit('num_clients', {num : io.sockets.clients('testroom-controller').length - 1});
 	});
 
 	socket.on('setName', function(data) {
@@ -75,8 +97,10 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('controlclick', function(data) {
-		console.log('Someone clicked a button');
+		console.log(data.name+' clicked a button');
 		confirmRec('Thanks for clicking');
+
+		socket.broadcast.to('testroom-screen').emit('controlclick', data);
 	});
 
 	// testing RTT initiated from Client side every 2 secs
