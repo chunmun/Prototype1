@@ -1,0 +1,10 @@
+extends layout
+
+block content
+
+  h1 = title
+  p Welcome to #{title}
+  p#ping msec
+  input(type='button', onclick='controlclick()', value='Click Moi')
+
+  script(type='text/javascript', src='/javascripts/controller.js')
