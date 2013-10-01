@@ -35,7 +35,6 @@ app.get('/controller', routes.controller);
 app.get('/controller/*', routes.controllerWithRoom);
 
 var allowCrossDomain = function(req, res, next) {
-    console.log('allowingCrossDomain');
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, Accept, Origin, Referer, User-Agent, Content-Type, Authorization, X-Mindflash-SessionID');
@@ -92,19 +91,25 @@ io.sockets.on('connection', function(socket) {
 	socket.on('register', function(data) {
 		type = data.type;
 		room = data.room;
+		console.log('A new '+data.type+' has joined '+room);
 
 		socket.join('world-'+data.type);
 		socket.join(data.room+'-'+data.type);	
 
 		confirmRec('Joined as '+data.type+' in '+data.room);
 
-		confirmNum(data.room);
+		confirmNum(data.room); // Useless
+		// Seems like the screen cannot join the room
+		// fast enough for the broadcast in confirmNum
+		// to work
+		socket.emit('num_clients', {num: io.sockets.clients(room+'-controller').length});
 	});
 
 	socket.on('disconnect', function() {
 		socket.leave('world-'+type);
 		socket.leave(room+'-'+type);
 		confirmNum(room);
+		console.log('A '+type+' has left '+room);
 	});
 
 	socket.on('setName', function(data) {
@@ -115,7 +120,6 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('controlclick', function(data) {
-		console.log(data.name+' clicked a button');
 		confirmRec('Thanks for clicking');
 
 		socket.broadcast.to(room+'-screen').emit('controlclick', data);
