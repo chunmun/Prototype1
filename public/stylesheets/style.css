@@ -12,3 +12,24 @@ fieldset {
   display: inline-block;
   text-align: center;
 }
+
+.button {
+	width : 60px;	
+	height : 60px;
+}
+
+.controller { 
+	float: left
+}
+
+.controllerLeft { 
+	float: left
+}
+
+.controllerRight { 
+	float: right
+}
+
+.clear {
+	clear: both;
+}
