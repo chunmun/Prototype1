@@ -80,7 +80,7 @@ io.sockets.on('connection', function(socket) {
 	}
 
 	var confirmNum = function(roomname) {
-		socket.broadcast.to(roomname+'-screen').emit('num_clients', {num : io.sockets.clients(roomname+'-controller').length });
+		io.sockets.in(roomname+'-screen').emit('num_clients', {num : io.sockets.clients(roomname+'-controller').length });
 	}
 
 	// Socket Events
@@ -98,11 +98,7 @@ io.sockets.on('connection', function(socket) {
 
 		confirmRec('Joined as '+data.type+' in '+data.room);
 
-		confirmNum(data.room); // Useless
-		// Seems like the screen cannot join the room
-		// fast enough for the broadcast in confirmNum
-		// to work
-		socket.emit('num_clients', {num: io.sockets.clients(room+'-controller').length});
+		confirmNum(data.room);
 	});
 
 	socket.on('disconnect', function() {
