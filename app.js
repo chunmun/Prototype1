@@ -28,6 +28,7 @@ if ('development' == app.get('env')) {
 }
 
 // For routing
+app.post('/choose', routes.choose);
 app.get('/', routes.index);
 app.get('/screen', routes.screen);
 app.get('/screen/*', routes.screenWithRoom);
@@ -91,12 +92,12 @@ io.sockets.on('connection', function(socket) {
 	socket.on('register', function(data) {
 		type = data.type;
 		room = data.room;
-		console.log('A new '+data.type+' has joined '+room);
+		console.log('A new '+data.type+' has joined Room : '+room);
 
 		socket.join('world-'+data.type);
 		socket.join(data.room+'-'+data.type);	
 
-		confirmRec('Joined as '+data.type+' in '+data.room);
+		confirmRec('Joined as '+data.type+' in Room : '+data.room);
 
 		confirmNum(data.room);
 	});

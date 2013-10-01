@@ -4,10 +4,18 @@ block content
   h1 = title
   p Welcome to #{title}
   p#ping Connecting ...
-  label Room Name : 
-  input(type = 'textfield', id='roomname')
-  p (Leave blank to connect to lobby)
-  div
-  a(class = 'button', href='/screen') I am a Screen
-  div
-  a(class = 'button', href='/controller') I am a Controller
+  form(action = '/choose', method = 'post')
+    fieldset
+      div
+        label Room Name : 
+        input(type = 'textfield', name = 'room', value = '')
+        p (Leave blank to connect to lobby)
+
+      div
+        input(type = 'radio', name = 'type', value = 'screen')
+        label Screen
+        input(type = 'radio', name = 'type', value = 'controller', checked = true)
+        label Controller
+
+      div
+        input(type = 'submit')
