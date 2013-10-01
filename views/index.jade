@@ -3,7 +3,11 @@ extends layout
 block content
   h1 = title
   p Welcome to #{title}
-  p#ping msec
-  input(type = "button"
-	  	value = "I am a Screen")
-  button I am a Controller
+  p#ping Connecting ...
+  label Room Name : 
+  input(type = 'textfield', id='roomname')
+  p (Leave blank to connect to lobby)
+  div
+  a(class = 'button', href='/screen') I am a Screen
+  div
+  a(class = 'button', href='/controller') I am a Controller

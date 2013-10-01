@@ -1,5 +1,5 @@
 // Client Side js
-var socket = io.connect('http://172.28.178.132:3000');
+var socket = io.connect('');
 var myname = 'ID '+Math.floor(Math.random()*1000);
 
 socket.on('welcome', function(data) {
@@ -24,8 +24,12 @@ performance.now = (function() {
 
 
 // For testing RTT in every 2 seconds - avg over 5 pings
+// There is exactly a 2 second window to send the pings
+// If we don't see 5 return pings in 2 sec == disconnected
+var INTERVAL_HEART_BEAT = 2000;
 function rttHeartBeat() {
 	var timings = [];
+	var hb_start = performance.now();
 
 	socket.on('rttHeartBeat', function(hb) {
 		var time = performance.now();
@@ -36,8 +40,7 @@ function rttHeartBeat() {
 		// Currently does not take into account timeouts
 		if (timings.length === 5) {
 			var total = timings.reduce(function(a,b){return a+b;});
-			// console.log('Avg rtt over 5 pings: '+(total/5.0)+ ' msecs');
-			document.getElementById('ping').innerHTML = (total/5.0) + ' msecs';
+			document.getElementById('ping').innerHTML = 'Latency : ' + (total/5.0) + ' ms';
 		}
 	});
 
@@ -45,6 +48,12 @@ function rttHeartBeat() {
 		var time = performance.now();
 		socket.emit('rttHeartBeat', {client_start_time: time});
 	}
+
+	setTimeout(function() {
+		if (timings.length < 5) {
+			document.getElementById('ping').innerHTML = 'Reconnecting ... (Latency > '+INTERVAL_HEART_BEAT+' ms)';
+		}
+	}, INTERVAL_HEART_BEAT)
 }
 
-setInterval(rttHeartBeat, 2000);
+setInterval(rttHeartBeat, INTERVAL_HEART_BEAT);
