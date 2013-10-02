@@ -71,7 +71,7 @@ io.set('log level', 2);
 
 io.sockets.on('connection', function(socket) {
 	var room = 'lobby';
-	var type;
+	var type = 'unknown type';
 	var name = 'Anonymous';
 
 	// Helper functions

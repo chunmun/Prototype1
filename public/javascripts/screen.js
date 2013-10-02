@@ -12,4 +12,15 @@ socket.emit('client-register', { type: 'screen', room: myroom });
 // Socket Events
 socket.on('controller-input', function(data) {
 	console.log('Controller : '+data.name+', key : ' + data.key + ', action : '+ data.action);
+	var keyboardevent;
+	switch (data.action) {
+		case 'vmousedown':
+			keyboardevent = 'KeyDown';
+			break;
+		case 'vmouseup':
+			keyboardevent = 'KeyUp';
+			break;
+	}
+
+	Crafty.trigger(keyboardevent, {key: Crafty.keys[data.key.toUpperCase()+'_ARROW']});
 });

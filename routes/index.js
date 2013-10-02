@@ -17,11 +17,14 @@ module.exports = {
 	},
 
 	screen : function(req, res) {
-		res.render('screen', { title: 'Prototype-1 Screen' });
+		// res.render('screen', { title: 'Prototype-1 Screen' });
+		res.render('gamescreen', { title: 'Prototype-1 Screen' });
 	},
 
 	screenWithRoom : function(req, res) {
-		res.render('screen', { title: 'Prototype-1 Screen' });
+		// res.render('screen', { title: 'Prototype-1 Screen' });
+		
+		res.render('gamescreen', { title: 'Prototype-1 Screen' });
 	},
 
 	controller : function(req, res) {
