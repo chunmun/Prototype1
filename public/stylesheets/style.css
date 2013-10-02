@@ -13,7 +13,7 @@ fieldset {
   text-align: center;
 }
 
-.button {
+.controller-button {
 	width : 60px;	
 	height : 60px;
 }
@@ -32,4 +32,15 @@ fieldset {
 
 .clear {
 	clear: both;
+}
+
+*:focus {outline: none;}
+
+.ui-loader {
+	display: none;
+}
+
+.ui-btn-text {
+	display: none;
+}
 }

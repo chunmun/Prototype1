@@ -6,22 +6,37 @@ window.addEventListener('load', function() {
 // Socket Registration code
 
 var path = window.location.pathname.slice(1).split('/');
+var myroom = 'lobby'; // default room
 if (path.length === 2 && path[1] !== '') {
 	// We have a room id
-	socket.emit('register', { type: 'controller', room: path[1] });
-} else {
-	socket.emit('register', { type: 'controller', room: 'lobby'});
+	myroom = path[1];
 }
+
+socket.emit('client-register', { type: 'controller', room: myroom });
 
 // Socket Events
 
-var controlclick = function(key) {
-	console.log('clicked');
-	socket.emit('controlclick', { name: myname, action: key });
-}
+$(document).ready(function () {
+	$.map($('.controller-button'), function(button) {
+		var keyval = $(button).data('key');
+		console.log(keyval);
+		// $(button).mousedown(function() {
+		// 	socket.emit('controller-input', { name: myname, key: keyval, action: 'keydown' });
+		// });
 
+		// $(button).mouseup(function() {
+		// 	socket.emit('controller-input', { name: myname, key: keyval, action: 'keyup' });
+		// });
 
+		$(button).on('vmousedown', function() {
+			socket.emit('controller-input', { name: myname, key: keyval, action: 'vmousedown' });
+		});
 
+		$(button).on('vmouseup', function() {
+			socket.emit('controller-input', { name: myname, key: keyval, action: 'vmouseup' });
+		});
+	})
+});
 
 // HTML5 Device motion
 

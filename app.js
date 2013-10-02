@@ -76,20 +76,25 @@ io.sockets.on('connection', function(socket) {
 
 	// Helper functions
 
-	var confirmRec = function(msg) {
-		socket.emit('confirm', { message : msg });
+	var serverMessage = function(msg) {
+		socket.emit('server-message', { message : msg });
 	}
 
-	var confirmNum = function(roomname) {
-		io.sockets.in(roomname+'-screen').emit('num_clients', {num : io.sockets.clients(roomname+'-controller').length });
+	var serverNumbers = function(roomname) {
+		io.sockets.in(roomname+'-screen').emit('server-num',{
+			room : roomname,
+			clients : (io.sockets.clients(roomname+'-controller').length || 0),
+			screens : (io.sockets.clients(roomname+'-screen').length || 0)
+		});
 	}
 
 	// Socket Events
 
-	socket.emit('Welcome', { room : 'World' });
 	socket.join('world');
+	serverMessage('MOTD: Welcome to Prototype-1');
+	serverNumbers('world');
 
-	socket.on('register', function(data) {
+	socket.on('client-register', function(data) {
 		type = data.type;
 		room = data.room;
 		console.log('A new '+data.type+' has joined Room : '+room);
@@ -97,35 +102,32 @@ io.sockets.on('connection', function(socket) {
 		socket.join('world-'+data.type);
 		socket.join(data.room+'-'+data.type);	
 
-		confirmRec('Joined as '+data.type+' in Room : '+data.room);
-
-		confirmNum(data.room);
+		serverMessage('Joined as '+data.type+' in Room : '+data.room);
+		serverNumbers(data.room);
 	});
 
 	socket.on('disconnect', function() {
 		socket.leave('world-'+type);
 		socket.leave(room+'-'+type);
-		confirmNum(room);
+
+		serverNumbers(room);
 		console.log('A '+type+' has left '+room);
 	});
 
-	socket.on('setName', function(data) {
+	socket.on('client-name', function(data) {
 		name = data.name;
-		// No idea wtf does this do
-		socket.set('name', data.name, function() { socket.emit('ready'); });
-		confirmRec('Set name to '+data.name);
+		serverMessage('Set name to '+data.name);
 	});
 
-	socket.on('controlclick', function(data) {
-		confirmRec('Thanks for clicking');
-
-		socket.broadcast.to(room+'-screen').emit('controlclick', data);
+	socket.on('controller-input', function(data) {
+		serverMessage(data.action+' received for '+data.key);
+		socket.broadcast.to(room+'-screen').emit('controller-input', data);
 	});
 
-	// testing RTT initiated from Client side every 2 secs
+	// Servce RTT initiated from Client side every 2 secs
 	// in burst of 5 pings
-	socket.on('rttHeartBeat', function(data) {
+	socket.on('screen-rttHeartBeat', function(data) {
 		data.server_time = Date.now();
-		socket.emit('rttHeartBeat', data);
+		socket.emit('server-rttHeartBeat', data);
 	});
 });

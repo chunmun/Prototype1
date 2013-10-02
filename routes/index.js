@@ -11,6 +11,8 @@ module.exports = {
 	choose : function(req, res) {
 		var room = req.body.room;
 		var type = req.body.type;
+		console.log('type: '+type);
+		console.log('room: '+room);
 		res.redirect('/'+type+'/'+room);
 	},
 

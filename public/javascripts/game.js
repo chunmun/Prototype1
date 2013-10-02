@@ -7,8 +7,13 @@ socket.on('welcome', function(data) {
 	socket.emit('setName', {name: myname});
 });
 
-socket.on('confirm', function(data) {
-	console.log('Confirm: '+data.message);
+socket.on('server-message', function(data) {
+	console.log('Server : ' + data.message);
+});
+
+
+socket.on('server-num', function(data) {
+	document.getElementById('connected').innerHTML = 'Connected in '+data.room+', Controllers : '+data.clients+', Screens : '+data.screens;
 });
 
 // Performance calls for use in rttHeartBeat
@@ -31,7 +36,7 @@ function rttHeartBeat() {
 	var timings = [];
 	var hb_start = performance.now();
 
-	socket.on('rttHeartBeat', function(hb) {
+	socket.on('server-rttHeartBeat', function(hb) {
 		var time = performance.now();
 		hb.client_end_time = time;
 		var diff = hb.client_end_time - hb.client_start_time;
@@ -46,7 +51,7 @@ function rttHeartBeat() {
 
 	for (var i = 0; i < 5; i ++) {
 		var time = performance.now();
-		socket.emit('rttHeartBeat', {client_start_time: time});
+		socket.emit('screen-rttHeartBeat', {client_start_time: time});
 	}
 
 	setTimeout(function() {
