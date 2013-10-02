@@ -9,6 +9,7 @@ Prototype-1
 ## How to connect?
 
 As a Screen: http://localhost:3000/screen
+
 As a Controller: http://localhost:3000/controller
 
 Note this will connect you to the default room : lobby
