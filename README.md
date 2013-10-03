@@ -17,3 +17,6 @@ Note this will connect you to the default room : lobby
 ## How to connect to a particular room
 
 Just add /roomname behind your url. An example will be http://localhost:3000/controller/1234 to join room 1234
+
+## Thanks for providing necessary devices to test the controller
+Teo Chee Wee-sama
