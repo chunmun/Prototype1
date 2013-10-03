@@ -1,0 +1,51 @@
+table td, table tr, input{
+	-webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+	-webkit-user-select: none;      
+}
+
+.controller-button {
+	width : 6em;
+	height : 6em;
+}
+
+.controller { 
+	float: left
+}
+
+.controllerLeft { 
+	float: left;
+	width: auto;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+	border-style: solid;
+	border-color: red;
+}
+
+.controllerRight { 
+	float: right;
+	width: auto;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+	border-style: solid;
+	border-color: red;
+}
+
+.clear {
+	clear: both;
+}
+
+
+html,body{
+	margin:0;
+	padding:0;
+	height:100%;
+	width:100%;
+}
+
+#full-size{
+	height:100%;
+	width:100%;
+	overflow:hidden;
+}

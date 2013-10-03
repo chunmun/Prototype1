@@ -57,13 +57,14 @@ Game = {
 				}
 				 
 				if (Crafty('Village').length >= max_villages) {
-					return;
+					break;
 				}
 			}
 		}
 
 		// Player character, placed at 5, 5 on our grid
-		Crafty.e('PlayerCharacter').at(5, 5)
+		Crafty.e('PlayerCharacter').at(5, 5);
+		
 	}
 }
 

@@ -13,14 +13,23 @@ socket.emit('client-register', { type: 'screen', room: myroom });
 socket.on('controller-input', function(data) {
 	console.log('Controller : '+data.name+', key : ' + data.key + ', action : '+ data.action);
 	var keyboardevent;
+	var keyval = Crafty.keys[data.key.toUpperCase()+'_ARROW'];
 	switch (data.action) {
 		case 'vmousedown':
 			keyboardevent = 'KeyDown';
 			break;
+		case 'vmouseout':
+			if (Crafty.keydown[keyval]) {
+				keyboardevent = 'KeyUp';
+				console.log('sending keyup event');
+				break;
+			} else {
+				return; // Just ignore the event
+			}
 		case 'vmouseup':
 			keyboardevent = 'KeyUp';
 			break;
 	}
 
-	Crafty.trigger(keyboardevent, {key: Crafty.keys[data.key.toUpperCase()+'_ARROW']});
+	Crafty.trigger(keyboardevent, {key: keyval});
 });

@@ -27,13 +27,11 @@ $(document).ready(function () {
 		// $(button).mouseup(function() {
 		// 	socket.emit('controller-input', { name: myname, key: keyval, action: 'keyup' });
 		// });
-
-		$(button).on('vmousedown', function() {
-			socket.emit('controller-input', { name: myname, key: keyval, action: 'vmousedown' });
-		});
-
-		$(button).on('vmouseup', function() {
-			socket.emit('controller-input', { name: myname, key: keyval, action: 'vmouseup' });
+		var triggers = ['vmousedown', 'vmouseup', 'vmouseout'];
+		triggers.map(function(trigger) {
+			$(button).on(trigger, function() {
+				socket.emit('controller-input', { name: myname, key: keyval, action: trigger });
+			});
 		});
 	})
 });
